@@ -1,0 +1,76 @@
+<html>
+  <head>
+	<title> Control | Wrapper </title>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  </head>
+
+  <body>
+    <div id="dashboard_div">
+      <div id="filter_div"></div>
+	  <div id="chart_div"></div>
+    </div>
+  </body>
+  
+<script type="text/javascript">
+// Load the Visualization API and the piechart package.
+google.charts.load('current', {'packages':['corechart', 'controls']});
+google.charts.setOnLoadCallback(drawChart);
+
+// Check if data changed
+    var previous = null;
+    var current = null;
+    setInterval(function() {
+        $.getJSON("Data.json", function(json) {
+            current = JSON.stringify(json);            
+            if (previous && current && previous !== current) {
+                console.log('refresh');
+                location.reload();
+            }
+            previous = current;
+        });                       
+    }, 5000);   
+      
+function drawChart(){
+    var jsonData = $.ajax({
+        url: "Data.json",
+        dataType: "json",
+        async: false
+        }).responseText;
+          
+    // Create our data table out of JSON data loaded from server.
+    var data = new google.visualization.DataTable(jsonData);
+	  
+    // Create a dashboard.
+    var dashboard = new google.visualization.Dashboard(
+        document.getElementById('dashboard_div'));
+
+    // Wrapper_1
+    var donutRangeSlider = new google.visualization.ControlWrapper({
+        'controlType': 'CategoryFilter',
+        'containerId': 'filter_div',
+        'options': {
+        'filterColumnLabel': 'Product Name'  //Column filtered
+       }
+    });
+	
+	// Create a pie/other chart, passing some options
+    var BarChart = new google.visualization.ChartWrapper({
+        'chartType': 'BarChart',
+        'containerId': 'chart_div',
+        'options': {
+        'width': 700,
+        'height': 700,
+        'pieSliceText': 'value',
+        'legend': 'right'
+       }
+    });
+	
+	dashboard.bind(donutRangeSlider, BarChart);
+    
+    // Draw the dashboard.
+    dashboard.draw(data);
+ }	
+
+</script>
+</html>
