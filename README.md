@@ -1,5 +1,4 @@
 # google-visualization-Excel vba
-connect excel spreadsheet to google chart
 
 Simply import  [ExcelToGoogleChart.bas](https://github.com/yuriarfil/vba-google-chart/blob/master/ExcelToGoogleChart.bas) into new `workbook`.
 
