@@ -10,9 +10,9 @@ Sub Excel_Data_To_Json_GChart()
     Dim r, c As Long
     Dim dataType As String
     
-        
+    
     On Error Resume Next
-    Set aRange = Application.InputBox(prompt:="Enter range (Header Include)", Type:=8)
+Set aRange = Application.InputBox(prompt:="Select data range (Header Include)", Type:=8)
     
     If aRange Is Nothing Then
         MsgBox "Operation Cancelled"
@@ -37,14 +37,18 @@ Sub Excel_Data_To_Json_GChart()
         For c = 1 To aRange.Columns.Count
             data = ""
             dataType = ""
-            If VarType(aRange.Cells(2, c)) = 8 Then 'Check VarType Function (TEXT)
+            If VarType(aRange.Cells(2, c)) = 8 Then   'VarType Function (String)
                 dataType = "string"
                 data = data & c & "," & """label" & """" & ":" & """" & aRange.Cells(1, c) & """" & "," & """" & "type" & """" & ":" & """" & dataType & """"
             Else
-                dataType = "number"
+            If VarType(aRange.Cells(2, c)) = 7 Then   'VarType Function (Date)
+                dataType = "date"
+                data = data & c & "," & """label" & """" & ":" & """" & aRange.Cells(1, c) & """" & "," & """" & "type" & """" & ":" & """" & dataType & """"
+            Else
+                dataType = "number"   'VarType Function (Number)
                 data = data & c & "," & """label" & """" & ":" & """" & aRange.Cells(1, c) & """" & "," & """" & "type" & """" & ":" & """" & dataType & """"
             End If
-            
+            End If
                 data = Left(data, Len(data) - 0)
                 If c = aRange.Columns.Count Then
                     data = "{" & """" & "id" & """" & ":" & data & "}"
@@ -54,7 +58,6 @@ Sub Excel_Data_To_Json_GChart()
        
             FilePath.WriteLine data
         Next
-    
             data = "],"
             FilePath.WriteLine data
             
@@ -66,13 +69,21 @@ Sub Excel_Data_To_Json_GChart()
         For r = 2 To aRange.Rows.Count
             data = ""
             For c = 1 To aRange.Columns.Count
-                If aRange(r, c) = vbNullString Then 'If data empty
+                If aRange(r, c) = vbNullString Then   'If data empty
                     data = data & "{" & """" & "v" & """" & ":" & "null" & "}" & ","
                 Else
-                    If VarType(aRange.Cells(r, c)) = 8 Then 'Check VarType Function (TEXT)
+                    If VarType(aRange.Cells(r, c)) = 8 Then   'VarType Function (String)
                         data = data & "{" & """" & "v" & """" & ":" & """" & aRange.Cells(r, c) & """" & "}" & ","
                     Else
-                        data = data & "{" & """" & "v" & """" & ":" & aRange.Cells(r, c) & "}" & ","
+                    If VarType(aRange.Cells(r, c)) = 7 Then   'VarType Function (Date) (zero-based month)
+                        data = data & "{" & """" & "v" & """" & ":" & """" & "Date" & _
+                        "(" & Format(aRange.Cells(r, c), "yyyy") & _
+                        "," & Format(aRange.Cells(r, c), "mm") - 1 & _
+                        "," & Format(aRange.Cells(r, c), "dd") & _
+                        ")" & """" & "}" & ","
+                    Else
+                        data = data & "{" & """" & "v" & """" & ":" & aRange.Cells(r, c) & "}" & ","   'VarType Function (Number)
+                    End If
                     End If
                 End If
             Next
@@ -85,7 +96,6 @@ Sub Excel_Data_To_Json_GChart()
        
             FilePath.WriteLine data
         Next
-        
             data = "]"
             FilePath.WriteLine data
             data = "}"
