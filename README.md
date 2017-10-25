@@ -1,8 +1,10 @@
 # google-visualization-Excel vba
 
+[Populating Data Using Server-Side Code](https://developers.google.com/chart/interactive/docs/php_example)
+
 Simply import  [ExcelToGoogleChart.bas](https://github.com/yuriarfil/vba-google-chart/blob/master/ExcelToGoogleChart.bas) into new `workbook`.
 
-Run the 'Macro' once the data updated(`to convert excel data to JavaScript Literal data Parameter`).
+Run the 'Macro' (`to convert excel data to JavaScript Literal data Parameter`).
 
 Call the data through Google Chart API. for [example](https://github.com/yuriarfil/vba-google-chart/blob/master/rangefilter-chart.html).
 
