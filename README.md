@@ -2,7 +2,7 @@
 
 [Populating Data Using Server-Side Code.](https://developers.google.com/chart/interactive/docs/php_example)
 
-![google-visualization-vba](https://user-images.githubusercontent.com/24689541/32131249-affce7ca-bbd3-11e7-8e04-42019b215aff.gif)
+![example](https://user-images.githubusercontent.com/24689541/32131458-a6918786-bbd8-11e7-80be-6b5d27b2a356.gif)
 
 Getting started
 ---------------
